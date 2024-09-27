@@ -2,6 +2,7 @@ package br.com.api.dealership.controllers;
 
 import br.com.api.dealership.dtos.CarRequestDto;
 import br.com.api.dealership.dtos.CarResponseDto;
+import br.com.api.dealership.queryfilters.CarQueryFilter;
 import br.com.api.dealership.services.CarService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -32,8 +33,8 @@ public class CarController {
     }
 
     @GetMapping
-    public ResponseEntity<List<CarResponseDto>> getAll() {
-        var cars = carService.getAll();
+    public ResponseEntity<List<CarResponseDto>> getAll(CarQueryFilter filter) {
+        var cars = carService.getAll(filter);
         return ResponseEntity.status(HttpStatus.OK).body(cars);
     }
 

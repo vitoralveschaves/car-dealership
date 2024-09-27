@@ -3,6 +3,7 @@ package br.com.api.dealership.services.impl;
 import br.com.api.dealership.dtos.CarRequestDto;
 import br.com.api.dealership.dtos.CarResponseDto;
 import br.com.api.dealership.mappers.CarMapper;
+import br.com.api.dealership.queryfilters.CarQueryFilter;
 import br.com.api.dealership.repositories.CarRepository;
 import br.com.api.dealership.repositories.MakeRepository;
 import br.com.api.dealership.services.CarService;
@@ -57,8 +58,8 @@ public class CarServiceImpl implements CarService {
     }
 
     @Override
-    public List<CarResponseDto> getAll() {
-        var cars = carRepository.findAll();
+    public List<CarResponseDto> getAll(CarQueryFilter filter) {
+        var cars = carRepository.findAll(filter.toSpecification());
         logger.info("Cars listed: {}", cars);
         return cars.stream().map(carMapper::entityToDto).toList();
     }
