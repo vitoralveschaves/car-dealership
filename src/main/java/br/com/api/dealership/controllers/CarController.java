@@ -2,13 +2,13 @@ package br.com.api.dealership.controllers;
 
 import br.com.api.dealership.dtos.CarRequestDto;
 import br.com.api.dealership.dtos.CarResponseDto;
+import br.com.api.dealership.dtos.PaginationResponseDto;
 import br.com.api.dealership.queryfilters.CarQueryFilter;
 import br.com.api.dealership.services.CarService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
 import java.util.UUID;
 
 @RestController
@@ -33,8 +33,10 @@ public class CarController {
     }
 
     @GetMapping
-    public ResponseEntity<List<CarResponseDto>> getAll(CarQueryFilter filter) {
-        var cars = carService.getAll(filter);
+    public ResponseEntity<PaginationResponseDto> getAll(CarQueryFilter filter,
+                                                        @RequestParam(defaultValue = "0") Integer page,
+                                                        @RequestParam(defaultValue = "12") Integer pageSize) {
+        var cars = carService.getAll(filter, page, pageSize);
         return ResponseEntity.status(HttpStatus.OK).body(cars);
     }
 

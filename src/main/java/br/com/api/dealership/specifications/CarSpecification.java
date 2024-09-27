@@ -1,7 +1,6 @@
 package br.com.api.dealership.specifications;
 
 import br.com.api.dealership.entities.Car;
-import br.com.api.dealership.entities.Make;
 import br.com.api.dealership.enums.CarModel;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.util.ObjectUtils;

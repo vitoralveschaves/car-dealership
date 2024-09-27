@@ -2,6 +2,8 @@ package br.com.api.dealership.services.impl;
 
 import br.com.api.dealership.dtos.CarRequestDto;
 import br.com.api.dealership.dtos.CarResponseDto;
+import br.com.api.dealership.dtos.PaginationResponseDto;
+import br.com.api.dealership.entities.Car;
 import br.com.api.dealership.mappers.CarMapper;
 import br.com.api.dealership.queryfilters.CarQueryFilter;
 import br.com.api.dealership.repositories.CarRepository;
@@ -9,11 +11,12 @@ import br.com.api.dealership.repositories.MakeRepository;
 import br.com.api.dealership.services.CarService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
-import java.util.List;
 import java.util.UUID;
 
 @Service
@@ -58,10 +61,12 @@ public class CarServiceImpl implements CarService {
     }
 
     @Override
-    public List<CarResponseDto> getAll(CarQueryFilter filter) {
-        var cars = carRepository.findAll(filter.toSpecification());
+    public PaginationResponseDto getAll(CarQueryFilter filter, Integer page, Integer pageSize) {
+        Page<Car> carsPage = carRepository.findAll(filter.toSpecification(), PageRequest.of(page, pageSize));
+        var cars = carsPage.stream().map(carMapper::entityToDto).toList();
+
         logger.info("Cars listed: {}", cars);
-        return cars.stream().map(carMapper::entityToDto).toList();
+        return new PaginationResponseDto(page, pageSize, carsPage.getTotalPages(), carsPage.isFirst(), carsPage.isLast(), cars);
     }
 
     @Override
