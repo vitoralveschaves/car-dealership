@@ -5,6 +5,7 @@ import br.com.api.dealership.dtos.CarResponseDto;
 import br.com.api.dealership.dtos.PaginationResponseDto;
 import br.com.api.dealership.queryfilters.CarQueryFilter;
 import br.com.api.dealership.services.CarService;
+import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -21,13 +22,14 @@ public class CarController {
     }
 
     @PostMapping
-    public ResponseEntity<CarResponseDto> save(@RequestBody CarRequestDto request) {
+    public ResponseEntity<CarResponseDto> save(@RequestBody @Valid CarRequestDto request) {
         var savedCar = carService.save(request);
         return ResponseEntity.status(HttpStatus.CREATED).body(savedCar);
     }
 
     @GetMapping("/{carId}")
     public ResponseEntity<CarResponseDto> getById(@PathVariable("carId") UUID carId) {
+        System.out.println(carId);
         var car = carService.getById(carId);
         return ResponseEntity.status(HttpStatus.OK).body(car);
     }
@@ -41,7 +43,7 @@ public class CarController {
     }
 
     @PutMapping("/{carId}")
-    public ResponseEntity<CarResponseDto> update(@PathVariable("carId") UUID carId, @RequestBody CarRequestDto request) {
+    public ResponseEntity<CarResponseDto> update(@PathVariable("carId") UUID carId, @RequestBody @Valid CarRequestDto request) {
         var updatedCar = carService.update(carId, request);
         return ResponseEntity.status(HttpStatus.OK).body(updatedCar);
     }

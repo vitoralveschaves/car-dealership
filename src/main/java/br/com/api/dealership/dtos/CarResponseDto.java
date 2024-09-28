@@ -11,6 +11,7 @@ public record CarResponseDto(UUID id,
                              Integer year,
                              BigDecimal price,
                              Boolean used,
+                             Integer mileage,
                              CarModel model,
                              Make make) {
 }

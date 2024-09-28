@@ -4,6 +4,7 @@ import br.com.api.dealership.dtos.CarRequestDto;
 import br.com.api.dealership.dtos.CarResponseDto;
 import br.com.api.dealership.dtos.PaginationResponseDto;
 import br.com.api.dealership.entities.Car;
+import br.com.api.dealership.exceptions.IdNotFoundException;
 import br.com.api.dealership.mappers.CarMapper;
 import br.com.api.dealership.queryfilters.CarQueryFilter;
 import br.com.api.dealership.repositories.CarRepository;
@@ -13,9 +14,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
-import org.springframework.web.server.ResponseStatusException;
 
 import java.util.UUID;
 
@@ -40,7 +39,7 @@ public class CarServiceImpl implements CarService {
 
         if(request.makeId() != null) {
             var make = makeRepository.findById(request.makeId())
-                    .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Id not found"));;
+                    .orElseThrow(IdNotFoundException::new);
             var carEntity = request.toEntity(make);
             var carEntitySaved = carRepository.save(carEntity);
             logger.info("Car created: {}", carEntitySaved);
@@ -55,7 +54,7 @@ public class CarServiceImpl implements CarService {
     @Override
     public CarResponseDto getById(UUID carId) {
         var car = carRepository.findById(carId)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Car not found"));
+                .orElseThrow(IdNotFoundException::new);
         logger.info("Car found: {}", car);
         return carMapper.entityToDto(car);
     }
@@ -66,21 +65,25 @@ public class CarServiceImpl implements CarService {
         var cars = carsPage.stream().map(carMapper::entityToDto).toList();
 
         logger.info("Cars listed: {}", cars);
-        return new PaginationResponseDto(page, pageSize, carsPage.getTotalPages(), carsPage.isFirst(), carsPage.isLast(), cars);
+        return new PaginationResponseDto(page, pageSize, carsPage.getTotalPages(),
+                carsPage.isFirst(), carsPage.isLast(), cars);
     }
 
     @Override
     public CarResponseDto update(UUID carId, CarRequestDto request) {
         var carFound = carRepository.findById(carId)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Car not found"));
-        var make = makeRepository.findById(request.makeId())
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Id not found"));
+                .orElseThrow(IdNotFoundException::new);
+        if(request.makeId() != null) {
+            var make = makeRepository.findById(request.makeId());
+            make.ifPresent(carFound::setMake);
+        } else {
+            carFound.setMake(null);
+        }
         carFound.setName(request.name());
         carFound.setYear(request.year());
         carFound.setPrice(request.price());
         carFound.setMileage(request.mileage());
         carFound.setModel(request.model());
-        carFound.setMake(make);
         var updatedCar = carRepository.save(carFound);
         logger.info("Car updated: {}", updatedCar);
         return carMapper.entityToDto(updatedCar);
@@ -90,7 +93,7 @@ public class CarServiceImpl implements CarService {
     public void delete(UUID carId) {
          var existCar = carRepository.existsById(carId);
          if(!existCar) {
-             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Id not found");
+             throw new IdNotFoundException();
          }
          carRepository.deleteById(carId);
          logger.info("Car deleted");
