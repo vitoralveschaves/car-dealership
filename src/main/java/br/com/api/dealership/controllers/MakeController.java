@@ -4,6 +4,7 @@ import br.com.api.dealership.dtos.MakeRequestDto;
 import br.com.api.dealership.dtos.MakeResponseDto;
 import br.com.api.dealership.services.MakeService;
 import br.com.api.dealership.swagger.MakeControllerSwagger;
+import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -21,7 +22,7 @@ public class MakeController implements MakeControllerSwagger {
     }
 
     @PostMapping
-    public ResponseEntity<MakeResponseDto> save(@RequestBody MakeRequestDto request) {
+    public ResponseEntity<MakeResponseDto> save(@RequestBody @Valid  MakeRequestDto request) {
         var savedMake = makeService.register(request);
         return ResponseEntity.status(HttpStatus.CREATED).body(savedMake);
     }
