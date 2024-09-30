@@ -3,6 +3,7 @@ package br.com.api.dealership.controllers;
 import br.com.api.dealership.dtos.MakeRequestDto;
 import br.com.api.dealership.dtos.MakeResponseDto;
 import br.com.api.dealership.services.MakeService;
+import br.com.api.dealership.swagger.MakeControllerSwagger;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -11,7 +12,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/make")
-public class MakeController {
+public class MakeController implements MakeControllerSwagger {
 
     private final MakeService makeService;
 
