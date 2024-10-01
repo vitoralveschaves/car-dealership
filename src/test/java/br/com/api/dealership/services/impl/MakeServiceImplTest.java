@@ -17,8 +17,11 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.mockito.junit.jupiter.MockitoSettings;
 import org.mockito.quality.Strictness;
 
+import java.util.List;
+
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -65,5 +68,25 @@ class MakeServiceImplTest {
             verify(makeRepository, times(1)).save(makeArgumentCaptor.getAllValues().get(0));
             verify(makeMapper, times(1)).entityToDto(makeArgumentCaptor.getAllValues().get(1));
         }
+
+        @Nested
+        class GetAll {
+            @Test
+            @DisplayName("Should get all makes with success")
+            @MockitoSettings(strictness = Strictness.LENIENT)
+            void getAllMakesWithSuccess() {
+                Make make = new Make(1L, "Toyota", "123");
+                doReturn(List.of(make)).when(makeRepository).findAll();
+
+                MakeResponseDto makeDto = new MakeResponseDto(1L, "Toyota", "123");
+
+                doReturn(makeDto).when(makeMapper).entityToDto(any(Make.class));
+
+                List<MakeResponseDto> all = makeService.getAll();
+                assertNotNull(all);
+                assertEquals(List.of(makeDto), all);
+            }
+        }
+
     }
 }
