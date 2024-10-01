@@ -1,13 +1,13 @@
 <h1 style="font-weight: bold;">Car DealerShip API (Concessionária de carros) 💻</h1>
 
 <p align="center">
-  <div><b>Car DealerShip</b> é uma API projetada para gerenciar o cadastro de veículo. API permite o registro de novos veículos com informações detalhadas, como marca, modelo, ano e preço.</div>
+  <div><b>Car DealerShip</b> é uma API projetada para gerenciar o cadastro de veículos. API permite o registro de novos veículos com informações detalhadas, como marca, modelo, ano e preço.</div>
   <div>A listagem de veículos cadastrados, oferece suporte a paginação para facilitar a navegação entre grandes volumes de dados. Filtros avançados garantem que os usuários possam buscar veículos de maneira precisa, com base em atributos como faixa de preço, marca e modelo.</div>
   <div>A atualização de informações permite a modificação dos dados de veículos existentes de forma ágil. Para garantir a gestão eficiente dos registros, a API também possui a funcionalidade de remoção de veículos, possibilitando a exclusão segura e eficaz de dados.</div>
-  <div>A API Car DealerShip é acompanhada de uma suite de testes unitários desenvolvidos com JUnit e Mockito. Isso garante que cada funcionalidade seja testada de maneira robusta, promovendo a confiabilidade e a qualidade do código.</div>
+  <div>A API Car DealerShip é acompanhada de testes unitários desenvolvidos com JUnit e Mockito. Isso garante que cada funcionalidade seja testada de maneira robusta, promovendo a confiabilidade e a qualidade do código.</div>
 </p>
 
-<h2 id="technologies">💻 Tecnologias</h2>
+<h2 id="technologies">💻 Tecnologias Utilizadas</h2>
 <div style="display:inline_block">
     <br />
     <img src="https://img.shields.io/badge/java-%23ED8B00.svg?style=for-the-badge&logo=openjdk&logoColor=white" alt="java"/>
@@ -27,13 +27,13 @@ Tenha instalado em sua máquina as seguintes tecnologias:
 - Apache Maven
 - Docker
 
-<h3>Clonando projeto</h3>
+<h3>Clonando o projeto</h3>
 
 ```bash
 git clone https://github.com/vitoralveschaves/car-dealership
 ```
 
-<h3>Iniciando o container com o banco de dados Postgres</h3>
+<h3>Iniciando o container com o banco de dados PostgreSql</h3>
 <p>Com o projeto aberto em sua IDE (Intellij ou Eclipse), digite no terminal da IDE:</p>
 
 ```bash
@@ -41,7 +41,7 @@ docker compose up -d
 ```
 <h3>Iniciando</h3>
 
-- Inicia sua aplicação clicando no Run da sua IDE ou com as teclas Ctrl + Shift + F10 (Intellij)
+- Inicie sua aplicação clicando no Run da sua IDE ou com as teclas Ctrl + Shift + F10 (Intellij)
 - A aplicação estará executando em http://localhost:8081/api/v1
 
 <h3>Documentação e Endpoints</h3>
