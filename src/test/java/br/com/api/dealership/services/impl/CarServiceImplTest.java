@@ -2,11 +2,13 @@ package br.com.api.dealership.services.impl;
 
 import br.com.api.dealership.dtos.CarRequestDto;
 import br.com.api.dealership.dtos.CarResponseDto;
+import br.com.api.dealership.dtos.PaginationResponseDto;
 import br.com.api.dealership.entities.Car;
 import br.com.api.dealership.entities.Make;
 import br.com.api.dealership.enums.CarModel;
 import br.com.api.dealership.exceptions.IdNotFoundException;
 import br.com.api.dealership.mappers.CarMapper;
+import br.com.api.dealership.queryfilters.CarQueryFilter;
 import br.com.api.dealership.repositories.CarRepository;
 import br.com.api.dealership.repositories.MakeRepository;
 import org.junit.jupiter.api.Assertions;
@@ -21,8 +23,13 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.mockito.junit.jupiter.MockitoSettings;
 import org.mockito.quality.Strictness;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.jpa.domain.Specification;
 
 import java.math.BigDecimal;
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -146,6 +153,29 @@ class CarServiceImplTest {
     }
 
     @Nested
+    class GetAll {
+        @Test
+        @DisplayName("Should get list all cars with success")
+        @MockitoSettings(strictness = Strictness.LENIENT)
+        void listAllWithSuccess() {
+
+            var id = UUID.randomUUID();
+            List<Car> cars = List.of(
+                    new Car(id,"Corolla",2018, BigDecimal.valueOf(100000), true,3000,CarModel.SEDAN,null)
+            );
+            Page<Car> carPage = new PageImpl<>(cars, PageRequest.of(0, 12), 1);
+            doReturn(carPage).when(carRepository).findAll(any(Specification.class), any(PageRequest.class));
+
+            List<CarResponseDto> list = cars.stream().map(carMapper::entityToDto).toList();
+            PaginationResponseDto pagination = new PaginationResponseDto(0, 12, carPage.getTotalPages(), true, true, list);
+            CarQueryFilter filter = new CarQueryFilter();
+            PaginationResponseDto all = carService.getAll(filter, 0, 12);
+            assertNotNull(all);
+            assertEquals(pagination, all);
+        }
+    }
+
+    @Nested
     class GetById {
         @Test
         @DisplayName("Should get car by id with success when optional is present")
@@ -247,7 +277,12 @@ class CarServiceImplTest {
             doReturn(car).when(carRepository).save(carArgumentCaptor.capture());
             doReturn(carResponse).when(carMapper).entityToDto(carArgumentCaptor.capture());
 
-            carService.update(id, carRequest);
+            var res = carService.update(id, carRequest);
+
+            assertNotNull(res);
+            assertEquals(res.id(), carArgumentCaptor.getAllValues().get(1).getId());
+            assertEquals(res.name(), carArgumentCaptor.getAllValues().get(1).getName());
+            assertEquals(res.price(), carArgumentCaptor.getAllValues().get(1).getPrice());
 
             verify(makeRepository, times(1)).findById(any());
             verify(carRepository, times(1)).findById(uuidArgumentCaptor.getValue());
