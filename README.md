@@ -34,7 +34,7 @@ git clone https://github.com/vitoralveschaves/car-dealership
 ```
 
 <h3>Iniciando o container com o banco de dados PostgreSql</h3>
-<p>Com o projeto aberto em sua IDE (Intellij ou Eclipse), digite no terminal da IDE:</p>
+<p>Com o terminal, navegue até o diretório raiz do projeto clonado e digite o comando:</p>
 
 ```bash
 docker compose up -d
