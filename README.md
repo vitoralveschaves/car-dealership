@@ -26,6 +26,7 @@ Tenha instalado em sua máquina as seguintes tecnologias:
 - Java
 - Apache Maven
 - Docker
+- Intellij ou Eclipse
 
 <h3>Clonando o projeto</h3>
 
@@ -34,7 +35,7 @@ git clone https://github.com/vitoralveschaves/car-dealership
 ```
 
 <h3>Iniciando o container com o banco de dados PostgreSql</h3>
-<p>Com o terminal, navegue até o diretório raiz do projeto clonado e digite o comando:</p>
+<p>Com o terminal, navegue até o diretório do projeto clonado e digite o comando:</p>
 
 ```bash
 docker compose up -d
